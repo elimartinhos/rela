@@ -3,34 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Desativado</title>
+    <title>Jacaré Fujão Agressivo - O Tratado</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background-color: #222;
+            background-color: #4a7c59;
+            background-image: radial-gradient(circle, #4a7c59 0%, #2f4f38 100%);
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Montserrat', sans-serif;
-            text-align: center;
         }
-        .aviso {
-            color: #ff3333;
+        #jacare {
+            position: absolute;
+            transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.05s ease-in-out;
+            cursor: none;
+            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));
+            pointer-events: none;
+        }
+        #frase {
+            position: absolute;
             font-size: 2.5em;
             font-weight: 900;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-            line-height: 1.4;
-            padding: 20px;
+            color: #ff4444;
+            text-shadow: 4px 4px 4px rgba(0,0,0,0.6);
+            transform: translate(-50%, -50%) rotate(-5deg);
+            pointer-events: none;
+            opacity: 0;
+            animation: none;
+        }
+        @keyframes fadeOutAndScale {
+            0% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
+            10% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) rotate(-5deg) scale(0.5); visibility: hidden; }
+        }
+        #frase.show {
+            animation: fadeOutAndScale 1.8s forwards;
+        }
+
+        /* Estilos do Final Épico */
+        #tela-final {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #111;
+            z-index: 9999;
+            overflow-y: auto; /* Permite a rolagem manual */
+            overflow-x: hidden;
+        }
+        #texto-subindo {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto; /* Centraliza e dá um respiro no topo */
+            color: #f0f0f0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.3em;
+            line-height: 1.6;
+            padding: 0 20px 100px 20px; /* Espaço extra no final para facilitar o scroll */
+            box-sizing: border-box;
+        }
+        #texto-subindo h1, #texto-subindo h2, #texto-subindo h3 {
+            color: #d4af37;
+            margin-top: 40px;
+        }
+        #texto-subindo p {
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        #mensagem-agradecimento {
+            display: none;
+            position: fixed; /* Mantém fixo na tela toda */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-size: 4em;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="aviso">
-        SITE DESATIVADO POR INSATISFAÇÃO DO USUÁRIO<br>
-        TENTE RELAR EM OUTRO LUGAR
+
+    <!-- Jogo do Jacaré -->
+    <div id="jacare">
+        <svg viewBox="0 0 200 100" width="250" height="125">
+            <path d="M 130 35 L 140 15 L 155 15" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 130 65 L 140 85 L 155 85" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 60 35 L 70 10 L 85 10" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 60 65 L 70 90 L 85 90" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 140 50 Q 180 30 195 50 Q 180 70 140 50 Z" fill="#2d5a27"/>
+            <ellipse cx="100" cy="50" rx="55" ry="25" fill="#3a7332"/>
+            <path d="M 50 32 Q 5 35 10 50 Q 5 65 50 68 Z" fill="#3a7332"/>
+            <circle cx="50" cy="34" r="6" fill="#1a3317"/>
+            <circle cx="50" cy="66" r="6" fill="#1a3317"/>
+            <circle cx="49" cy="34" r="2" fill="#ffcc00"/>
+            <circle cx="49" cy="66" r="2" fill="#ffcc00"/>
+            <path d="M 65 50 L 135 50" fill="none" stroke="#1a3317" stroke-width="3" stroke-dasharray="4,6"/>
+            <path d="M 70 42 L 130 42" fill="none" stroke="#1a3317" stroke-width="2" stroke-dasharray="3,7"/>
+            <path d="M 70 58 L 130 58" fill="none" stroke="#1a3317" stroke-width="2" stroke-dasharray="3,7"/>
+        </svg>
     </div>
+    <div id="frase">Rela no jacaré!</div>
+
+    <!-- Tela do Texto Rolável -->
+    <div id="tela-final">
+        <div id="texto-subindo">
+            <h1>TRATADO DO RELLAR</h1>
+            <h2>Das Virtudes do Regozijo, do Fumo Odorífero e da Impossível Contenção do Espírito</h2>
+            
+            <h3>PROÉMIO</h3>
+            <p>Em o qual se declara a natureza do assunto e a dignidade do estudo</p>
+            <p>Prouvera aos antigos sábios e doutores da Santa Sede e das Universidades de Coimbra e Salamanca que todas as humanas acções fossem examinadas segundo a razão natural e a busca da suma felicitade. Entre as matérias mais graves e menos entendidas pelos homens de vulgar entendimento, atopa-se aquele singular costume a que a linguagem da plebe designa por rellar no jacaré.</p>
+            <p>Parece, à primeira vista, cousa de leve consideração e de pouca substância; contudo, quando penetramos com o engenho agudo nas frestas da filosofia moral e da natural doutrina, vemos que sob a figura daquele animal escamoso, que pelas águas se esgueira com espantosa agilidade, esconde-se o mais alto segredo da delectação humana: o festejamento da vida, a cessação dos cuidados mundanos e a elevação dos sentimentos por via de visões suavíssimas e fumos odoríferos.</p>
+            
+            <h3>CAPÍTULO I</h3>
+            <p>Da Natureza do Jacaré Alegórico e do Acto de Rellar</p>
+            <p>E primeiramente cumpre saber o que seja este grande lagarto das terras da conquista e porque razão os homens desejam com tanto ardor em seu corpo tocar. O jacaré, segundo ensinam os bestiários e a experiência dos navegantes, é besta de grande rijeza, revestido de couraça impenetrável e dotado de motim tão célere que nenhum homem, por mais destro que seja, o pode reter com a mão desarmada.</p>
+            <p>Quando os mancebos e os varões de folgazão espírito dizem rellar no jacaré, não pretendem eles, na verdade, ferir o réptil do rio nem causar-lhe dano; pretendem, sim, participar de sua natureza esquiva e indómita. O rellar — que é o leve e furtivo toque da mão sobre a pele da fera — significa a tentativa humana de tocar o efémero deleite, a festa suprema, o momento em que a alma se despoja dos grilhões do trabalho e das angústias para entrar no reino da pura alacridade.</p>
+            <p>Porem, assim como o jacaré na água se contorce e hão de falhar as mãos que o buscam agarrar, assim também a perfeita alegria não se deixa prender para sempre. Ela foge, esquiva-se, gira sobre si mesma e provoca o homem, bradando no íntimo do seu ser: "Rela! Rela se fores capaz!". E nisto consiste a primeira e mais nobre lição desta ciência: o regozijo não é cativeiro, mas movimento perpétuo e fuga dos males do mundo.</p>
+            
+            <h3>CAPÍTULO II</h3>
+            <p>Da Herbática Sacra e da Elevação da Mente pelo Fumo</p>
+            <p>Outrossi, ensina a mais discreta tradição que o rellar no jacaré guarda estreita parentela com o conhecimento das plantas aromáticas e das folhas incensadas que vieram das Índias e das terras d’Além-Mar. Disseram os médicos e os alquimistas do nosso tempo que existe vhũa herba de cor verde e de cheiro penetrante, a qual, sendo submetida ao fogo suave, produz um fumo de singular virtude.</p>
+            <p>Quando o homem acolhe nas suas entranhas esse efúvio sagrado, os seus olhos corporais se fecham para as misérias da terra, e os olhos da sua alma se abrem para visões de imensa paz e concórdia. A mente, que antes vivia pesada e cheia de cuidados como o chumbo, torna-se leve como a pena do falcão.</p>
+            <p>Neste estado de elevação fumosa, o indivíduo sente que a sua alma rella no jacaré, pois que atinge a velocidade daquela besta e com ela dança sem nunca se deixar apanhar pela tristeza ou pela melancolia. O fumo da herba actúa como um bálsamo que amansa o fogo da ira, dissolve o ódio entre os irmãos e faz com que todos os presentes na estalagem ou no campo se dêem às risadas, ao canto e à fraternidade. Por isso disseram os antigos que tal prática é o verdadeiro fazer a festa, onde todos são iguais perante a alegria.</p>
+
+            <h3>CAPÍTULO III</h3>
+            <p>Do Modo e da Ordem para Fazer a Festança sem Pecado</p>
+            <p>Para que o rellar no jacaré seja feito com a devida ordem e não resulte em desconcerto da cidade ou dano da saúde, convem guardar certas regras de boa governança e civilidade, quais sejam:</p>
+            <p>Da Companhia: Nunca se deve buscar a contorção do jacaré em solidão azeda, mas sim em junta de fiéis amigos e mancebos de bom génio, dispostos à música, à trova e ao riso desmedido.</p>
+            <p>Do Lugar: Convem escolher sítio folgado, debaixo da sombra das árvores ou junto às margens dos rios, onde o ar circule e o fumo da herba possa erguer-se às nuvens como incenso de louvor à criação.</p>
+            <p>Do Ritmo e da Música: Acompanhe-se a dita prática com o som dos pandeiros, das violas de arame e dos batuques que fazem o corpo mover-se em consonância com as esquivas do grande lagarto.</p>
+            <p>Da Moderação no Vinho: Se bem que a bebida de Baco seja agradável ao paladar, deve-se preferir a clareza trazida pelo fumo da planta, a fim de que os pés não tropecem quando o jacaré se esquivar de salto.</p>
+
+            <h3>CAPÍTULO IV</h3>
+            <p>Da Impossibilidade da Posse e do Eterno Desejo</p>
+            <p>Considere agora Vossa Mercê, Sr. Eli, a suma profundidade deste paradoxo: o homem busca o jacaré para lhe tocar, mas se o mantivesse preso e imóvel, a piada e o deleite do jogo deixariam de existir. O valor da festança e da fruição reside justamente na incerteza da captura.</p>
+            <p>Assim como o lagarto do rio se contorce todo quando a mão se avizinha, revelando uma agilidade que desafia a lei dos corpos pesados, assim também a verdadeira felicidade e a euforia do fumo aromático não podem ser estocadas em cofres nem vendidas nas feiras como se fossem pano de lã. Elas pertencem ao instante que passa, ao sopro do ar, ao momento em que a risada explode no peito dos companheiros.</p>
+            <p>Aquele que entende esta grande verdade deixa de ser um mero perseguidor da besta e passa a ser um participante do seu baile. Não mais tenta esmagar o jacaré, mas diverte-se com a sua esquiva, rindo a bom rir cada vez que o bicho salta para o outro lado e deixa na areia o eco da sua provocação.</p>
+
+            <h3>CAPÍTULO V</h3>
+            <p>Dos Efeitos da Fumosa Herba sobre a Visão e a Leveza da Alma</p>
+            <p>E porque não convem ao sábio ignorar os movimentos interiores da alma quando submetida ao efúvio da herba incensada, diremos agora do modo pelo qual a mente se descala do chão terreno. Acontece que, ao receber o fumo denso e aromático nas cavernas do peito, a força vital do homem se dilata de tal sorte que os olhos parecem enxergar as cores do mundo com dobro de vivo brilho.</p>
+            <p>As pedras do caminho, que dantes pareciam frias e escuras, tomam o tom do ouro e do âmbar; as vozes dos companheiros soam como instrumentos de corda afinados pelos anjos. A alma deixa de pesar nos ombros e torna-se tão leve que o indivíduo cuida poder flutuar sobre as águas do rio, à semelhança do próprio jacaré que desliza sem afundar. Não há nisto feitiçaria nem arte diabólica, mas tão-somente a natural abertura dos sentidos, que a divina providência concedeu à herba verde para alívio dos mortais.</p>
+
+            <h3>CAPÍTULO VI</h3>
+            <p>Do Ritual da Centelha e da Feitura do Cigarro Sagrado</p>
+            <p>Nenhum homem de bom conselho deve apressar-se na preparação do fumo, pois que o próprio acto de o aparelhar já faz parte da festa. Primeiramente, cumpre ao mancebo esfarelar a herba secada ao sol com os dedos limpos, atentando para que não fiquem talos duros nem pedras que impeçam a circulação do ar.</p>
+            <p>Em segundo lugar, toma-se a fina folha de papel de linho ou de palha suave, colocando nela a porção justa da herba, sem excesso que afogue o fogo, nem escassez que traga desapontamento. Com arte e destreza de artesão, o fumo é enrolado até tomar a figura de pequeno fuso ou cilindro reto. Por fim, aproxima-se a centelha do fogo; e quando o primeiro estalo se ouve e a fumaça alva começa a erguer-se, todos na roda inclinam a cabeça em sinal de concordia, sabendo que a contorção do jacaré está prestes a começar.</p>
+
+            <h3>CAPÍTULO VII</h3>
+            <p>Da Fome Sagrada e da Abundância das Mesas após a Fumada</p>
+            <p>Sabe-se por experiência certa e constante que, decorrido algum tempo após o rellar no jacaré por via da herba, um novo e poderoso apetite se apodera do corpo humano. Esta fome, a que os estudantes chamam apetitu renovato ou fome do jacaré, não é sinal de doença, mas do despertar dos jugos gástricos e do fogo interior.</p>
+            <p>Neste momento, os alimentos mais simples — o pão de trigo, o queijo curado, os favos de mel e as carnes assadas no espeto — adquirem um sabor de tão alta suavidade que parecem manjares do paraíso. O homem que come sob este estado não o faz com voracidade animal, mas com profunda e religiosa delectação, louvando cada pedaço que entra por sua boca e compartilhando o mantimento com os seus irmãos de roda, tornando o repasto vhũa verdadeira liturgia de fraternidade.</p>
+
+            <h3>CAPÍTULO VIII</h3>
+            <p>Da Sombra do Medo e do Modo de Vencer a Paranoia</p>
+            <p>Ocorre por vezes que algum mancebo de ânimo fraco ou pouca prática, ao sentir a força do fumo e a fuga do jacaré, seja assaltado por vhũa sombra de temor injustificado, a que a plebe chama aperreio ou visagem do mato. Pensa o coitado que os guardas do rei se aproximam ou que o seu coração bate com mais presteza do que a lei natural permite.</p>
+            <p>Contra esta aflição do espírito, ensina a nossa erudição que se deve aplicar o remédio do afeto e da palavra branda. Os companheiros da roda devem assentá-lo à sombra, oferecer-lhe água fresca da fonte e recordar-lhe com risos suaves que o jacaré apenas brinca e não morde. Dando-lhe a comer algo doce e fazendo soar a viola com cantigas alegres, a sombra logo se desvanece, e o mancebo retorna ao seio da festa com mais firmeza e conhecimento.</p>
+
+            <h3>CAPÍTULO IX</h3>
+            <p>Da Música, dos Batimentos e da Dança em Redor do Fogo</p>
+            <p>Não pode haver verdadeiro rellar no jacaré sem que a música faça a sua morada entre os presentes. O som do tambor, que imita a batida do coração, e o choro da viola de arame são o combustível que faz o corpo mover-se em ondulações esquivas.</p>
+            <p>Quando a melodia se entranha nas veias dos fumadores, o corpo humano perde a sua rigidez costumeira. O pescoço gira, os ombros balançam e os pés desenham no chão figuras imprevisíveis, tais como o rabo do jacaré quando se contorce na água profunda. A dança deixa de ser um conjunto de passos aprendidos com mestres e torna-se a expressão pura do espírito livre, que não aceita rédeas nem comandos do mundo exterior.</p>
+
+            <h3>CAPÍTULO X</h3>
+            <p>Da Comparação entre a Filosofia dos Antigos e o Rellar no Jacaré</p>
+            <p>Se examinarmos os livros dos antigos filósofos gregos e latinos, veremos que Aristóteles e Epicuro já buscavam aquilo que hoje chamamos de rellar no jacaré. O que era a ataraxia dos estóicos senão a capacidade de manter a alma serena e contorcida perante as dores e os ataques da fortuna?</p>
+            <p>O jacaré, ao fugir da mão que o tenta prender, dá uma lição de filosofia mais alta do que muitos tomos em pergaminho. Ele ensina que o homem sábio não deve contender contra o mundo nem deixar-se escravizar pelas ambições da corte ou pelo acúmulo de moedas de prata. O verdadeiro sábio é aquele que, instruído pela herba verde e pelo folgar sincero, sabe esquivar-se dos golpes da vida com a mesma graciosidade com que a besta do rio se esgueira do pescador.</p>
+
+            <h3>CAPÍTULO XI</h3>
+            <p>Do Riso Incontido e da Expulsão da Melancolia</p>
+            <p>A melancolia é, segundo os médicos medievais, o mais perigoso dos humores, pois que seca o sangue, ensombra o cérebro e leva o homem à ruína do corpo e da fé. Ora, o mais potente antídoto conhecedor contra tão vil mal é o riso desmedido e sem causa aparente que brota na roda de fumo.</p>
+            <p>Ao rellar no jacaré, o riso vem de sob o diafragma e explode na boca dos homens sem que seja mister vhũa piada elaborada. Qualquer gesto simples, a queda de um galho ou a simples vista do rosto do companheiro torna-se motivo para gargalhadas tão profundas que fazem chorar os olhos e doer a barriga. Por meio deste riso sagrado, a melancolia é totalmente expulsa do organismo, deixando no seu lugar a paz, a doçura e a saúde renovada.</p>
+
+            <h3>CAPÍTULO XII</h3>
+            <p>Da Dilatação do Tempo e da Eternidade do Instante</p>
+            <p>Outro grande mistério desta prática é o modo pelo qual o tempo do relógio e do sol perde a sua autoridade. Para o homem ordinário, vhũa hora é feita de sessenta minutos contados com rigor e cansaço. Contudo, para o mancebo que se encontra sob o efeito da herba incensada e da contorção do jacaré, o tempo comporta-se como matéria de cera que se estica e molda ao sabor do desejo.</p>
+            <p>Um único segundo de contemplação pode parecer vhũa eternidade de alegrias; e três horas de conversa e música passam como se fossem o piscar de um olho. Esta dilatação temporal permite ao homem provar o gosto da eternidade enquanto ainda vive neste vale de lágrimas, libertando-o da tirania das ampulhetas e das obrigações do dia de amanhã.</p>
+
+            <h3>CAPÍTULO XIII</h3>
+            <p>Da Apologia da Festa contra os Homens Azedos e Juízes Severos</p>
+            <p>Sempre haverá na cidade e nos vilarejos aqueles homens de cara amarrada, vestidos de panos escuros e de espírito azedo, que olham para o rellar no jacaré com indignação e raiva. São os perseguidores do riso, os quais não suportam ver a alegria alheia porquanto trazem a própria alma acorrentada na amargura.</p>
+            <p>A estes juízes severos respondemos com a doutrina da tolerância e da caridade. Não folgamos para fazer-lhes mal nem para destruir a ordem do reino, mas para cultivar o amor fraternal e a cura das nossas dores. Se em vez de condenarem o fumo da herba e o bailado dos mancebos, eles provassem um só trago do incenso verde e tentassem tocar o jacaré fugaz, veriam a sua raiva transformar-se em abraços e as suas sentenças duras em cantigas de louvor.</p>
+
+            <h3>CAPÍTULO XIV</h3>
+            <p>Da Fraternidade Imutável e da Memória do Rellar</p>
+            <p>Por fim, deve-se considerar o laço indissolúvel que se cria entre aqueles que juntamente rellaram no jacaré. A roda de fumo e de folguedo não é mero ajuntamento passageiro; é vhũa irmandade de sangue e de espírito que dura para além daquela noite.</p>
+            <p>Quando dois mancebos que participaram da dita celebração se encontram anos mais tarde nas praças ou nas estradas do reino, basta um simples olhar ou o sussurrar da palavra "Rela!" para que toda a antiga amizade e cumplicidade se acenda novamente. Eles sabem que compartilharam o segredo da vida e que, juntos, viram o grande lagarto contorcer-se na água, deixando para trás a lembrança da mais pura e inesquecível felicidade.</p>
+
+            <h3>EPÍLOGO</h3>
+            <p>Onde se conclui a excelência deste exercício moral e recreativo</p>
+            <p>Concluímos, pois, com a graça dos céus e a aprovação dos doutos, que o rellar no jacaré é a arte suprema de viver em liberdade. Quer se entenda por ele o ajuntamento dos corpos na dança e na celebração da vida, quer se entenda o uso da herba fumosa que pacifica os corações e ilumina a fantasia, trata-se de um dom que afasta a morte da alma e renova o vigor dos homens.</p>
+            <p>E quem quer que contra esta prática erguer a sua voz com severidade e cara amarrada, demonstra apenas que nunca sentiu a doçura do fumo incensado nem teve a destreza de ver, diante de seus olhos, a formosa e esquiva contorção do grande jacaré.</p>
+        </div>
+    </div>
+
+    <!-- Tela Preta Final -->
+    <div id="mensagem-agradecimento">Obrigado por relar!</div>
+
+    <script>
+        const jacare = document.getElementById('jacare');
+        const fraseElement = document.getElementById('frase');
+        const telaFinal = document.getElementById('tela-final');
+        const mensagemAgradecimento = document.getElementById('mensagem-agradecimento');
+
+        let jacareX = window.innerWidth / 2 - 125;
+        let jacareY = window.innerHeight / 2 - 62;
+        jacare.style.left = jacareX + 'px';
+        jacare.style.top = jacareY + 'px';
+
+        const frases = ["Rela no jacaré!", "Rela!", "Rela vai!"];
+        let isFugindo = false;
+        let contadorReladas = 0; // O contador sagrado
+
+        function getCentro() {
+            return {
+                x: parseInt(jacare.style.left) + 125,
+                y: parseInt(jacare.style.top) + 62.5
+            };
+        }
+
+        function iniciarFimEpico() {
+            // Esconde o jogo
+            jacare.style.display = 'none';
+            fraseElement.style.display = 'none';
+            
+            // Mostra o texto rolável
+            telaFinal.style.display = 'block';
+        }
+
+        // Listener para detectar quando o usuário chega ao fim do texto rolável
+        telaFinal.addEventListener('scroll', () => {
+            // Se a posição do scroll + altura visível for igual (com margem de 10px) à altura total do conteúdo
+            if (Math.ceil(telaFinal.scrollTop + telaFinal.clientHeight) >= telaFinal.scrollHeight - 10) {
+                telaFinal.style.display = 'none';
+                mensagemAgradecimento.style.display = 'flex';
+            }
+        });
+
+        function fugirEContorcerAgressivo(e) {
+            if (isFugindo) return;
+            
+            contadorReladas++;
+            
+            // Verifica se bateu as 50 vezes
+            if (contadorReladas >= 50) {
+                iniciarFimEpico();
+                return;
+            }
+
+            isFugindo = true;
+
+            const oldPos = getCentro();
+            const maxX = window.innerWidth - 250;
+            const maxY = window.innerHeight - 125;
+
+            let novoX, novoY;
+            do {
+                novoX = Math.max(0, Math.floor(Math.random() * maxX));
+                novoY = Math.max(0, Math.floor(Math.random() * maxY));
+            } while (Math.sqrt(Math.pow(novoX - oldPos.x, 2) + Math.pow(novoY - oldPos.y, 2)) < 300);
+
+            const rotacao = (Math.random() - 0.5) * 360; 
+            const contorcerX = 0.3 + Math.random() * 1.5; 
+            const contorcerY = 0.3 + Math.random() * 1.5; 
+            const skewX = (Math.random() - 0.5) * 40; 
+            const skewY = (Math.random() - 0.5) * 40;
+
+            jacare.style.left = novoX + 'px';
+            jacare.style.top = novoY + 'px';
+            jacare.style.transform = `rotate(${rotacao}deg) scale(${contorcerX}, ${contorcerY}) skew(${skewX}deg, ${skewY}deg)`;
+
+            exibirFrase(oldPos.x, oldPos.y);
+
+            setTimeout(() => {
+                jacare.style.transform = `rotate(${rotacao}deg) scale(1, 1) skew(0, 0)`;
+                isFugindo = false; 
+            }, 150); 
+        }
+
+        function exibirFrase(x, y) {
+            fraseElement.textContent = frases[Math.floor(Math.random() * frases.length)];
+            fraseElement.style.left = x + 'px';
+            fraseElement.style.top = y + 'px';
+            
+            fraseElement.classList.remove('show');
+            void fraseElement.offsetWidth;
+            fraseElement.classList.add('show');
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (contadorReladas >= 50) return; // Trava se já acabou
+            
+            const cursorX = e.clientX;
+            const cursorY = e.clientY;
+            const jacareCentro = getCentro();
+            
+            const distancia = Math.sqrt(Math.pow(cursorX - jacareCentro.x, 2) + Math.pow(cursorY - jacareCentro.y, 2));
+
+            if (distancia < 200 && !isFugindo) {
+                fugirEContorcerAgressivo(e);
+            }
+        });
+
+        document.addEventListener('touchstart', (e) => {
+            if (isFugindo || contadorReladas >= 50) return;
+            
+            const toque = e.touches[0];
+            const toqueX = toque.clientX;
+            const toqueY = toque.clientY;
+            const jacareCentro = getCentro();
+
+            const distancia = Math.sqrt(Math.pow(toqueX - jacareCentro.x, 2) + Math.pow(toqueY - jacareCentro.y, 2));
+            
+            if (distancia < 200) {
+                fugirEContorcerAgressivo(e);
+            }
+        });
+
+    </script>
 </body>
 </html>
