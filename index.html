@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jacaré Fujão Agressivo - Desativado</title>
+    <title>Tente relar no jacaré</title>
     <style>
         body {
             margin: 0;
@@ -15,71 +15,177 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Montserrat', sans-serif;
-            pointer-events: none; /* Desativa qualquer interação na página toda */
+            font-family: 'Montserrat', sans-serif; /* Uma fonte mais moderna para as frases */
         }
         #jacare {
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.05s ease-in-out;
+            cursor: none; /* Esconde o cursor padrão para aumentar a sensação de fuga */
             filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));
+            pointer-events: none; /* O jacaré em si não detecta eventos, o corpo faz isso de longe */
         }
-        
-        /* Camada do Aviso */
-        #aviso-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.4); /* Leve escurecimento para destacar o texto */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            text-align: center;
-        }
-        .aviso {
-            color: #ff3333;
+        #frase {
+            position: absolute;
             font-size: 2.5em;
             font-weight: 900;
-            text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
-            line-height: 1.4;
-            padding: 20px;
+            color: #ff4444; /* Vermelho vibrante */
+            text-shadow: 4px 4px 4px rgba(0,0,0,0.6);
+            transform: translate(-50%, -50%) rotate(-5deg); /* Leve inclinação para dar dinamismo */
+            pointer-events: none;
+            opacity: 0;
+            animation: none; /* Sem animação por padrão */
+        }
+        
+        /* Animação de fade-out e escala para a frase */
+        @keyframes fadeOutAndScale {
+            0% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1.1); }
+            10% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) rotate(-5deg) scale(0.5); visibility: hidden; }
+        }
+        #frase.show {
+            animation: fadeOutAndScale 1.8s forwards; /* Exibe e depois desaparece */
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Jogo no fundo (estático e não funcional) -->
+    <!-- O jacaré SVG -->
     <div id="jacare">
         <svg viewBox="0 0 200 100" width="250" height="125">
+            <!-- Pernas -->
             <path d="M 130 35 L 140 15 L 155 15" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M 130 65 L 140 85 L 155 85" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M 60 35 L 70 10 L 85 10" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M 60 65 L 70 90 L 85 90" fill="none" stroke="#1d3f18" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- Rabo -->
             <path d="M 140 50 Q 180 30 195 50 Q 180 70 140 50 Z" fill="#2d5a27"/>
+            
+            <!-- Corpo -->
             <ellipse cx="100" cy="50" rx="55" ry="25" fill="#3a7332"/>
+            
+            <!-- Focinho -->
             <path d="M 50 32 Q 5 35 10 50 Q 5 65 50 68 Z" fill="#3a7332"/>
+            
+            <!-- Olhos -->
             <circle cx="50" cy="34" r="6" fill="#1a3317"/>
             <circle cx="50" cy="66" r="6" fill="#1a3317"/>
             <circle cx="49" cy="34" r="2" fill="#ffcc00"/>
             <circle cx="49" cy="66" r="2" fill="#ffcc00"/>
+            
+            <!-- Escamas/Textura -->
             <path d="M 65 50 L 135 50" fill="none" stroke="#1a3317" stroke-width="3" stroke-dasharray="4,6"/>
             <path d="M 70 42 L 130 42" fill="none" stroke="#1a3317" stroke-width="2" stroke-dasharray="3,7"/>
             <path d="M 70 58 L 130 58" fill="none" stroke="#1a3317" stroke-width="2" stroke-dasharray="3,7"/>
         </svg>
     </div>
 
-    <!-- Aviso por cima -->
-    <div id="aviso-container">
-        <div class="aviso">
-            SITE DESATIVADO POR INSATISFAÇÃO DO USUÁRIO<br>
-            TENTE RELAR EM OUTRO LUGAR
-        </div>
-    </div>
+    <!-- O elemento de frase provocativa -->
+    <div id="frase">Rela no jacaré!</div>
 
+    <script>
+        const jacare = document.getElementById('jacare');
+        const fraseElement = document.getElementById('frase');
+
+        // Centraliza inicialmente
+        let jacareX = window.innerWidth / 2 - 125;
+        let jacareY = window.innerHeight / 2 - 62;
+        jacare.style.left = jacareX + 'px';
+        jacare.style.top = jacareY + 'px';
+
+        const frases = ["Rela no jacaré!", "Rela!", "Rela vai!"];
+        let isFugindo = false; // Flag para evitar fugas múltiplas simultâneas
+
+        // Calcula o centro do jacaré
+        function getCentro() {
+            return {
+                x: parseInt(jacare.style.left) + 125,
+                y: parseInt(jacare.style.top) + 62.5
+            };
+        }
+
+        // Função principal de fuga e contorção
+        function fugirEContorcerAgressivo(e) {
+            if (isFugindo) return;
+            isFugindo = true;
+
+            const oldPos = getCentro();
+            const maxX = window.innerWidth - 250;
+            const maxY = window.innerHeight - 125;
+
+            // Calcula a nova posição garantindo que fique dentro da tela e longe da antiga
+            let novoX, novoY;
+            do {
+                novoX = Math.max(0, Math.floor(Math.random() * maxX));
+                novoY = Math.max(0, Math.floor(Math.random() * maxY));
+            } while (Math.sqrt(Math.pow(novoX - oldPos.x, 2) + Math.pow(novoY - oldPos.y, 2)) < 300); // Garante uma distância mínima de 300px
+
+            // Contorção brutal para simular reflexo
+            const rotacao = (Math.random() - 0.5) * 360; // Rotação total até 360 graus
+            const contorcerX = 0.3 + Math.random() * 1.5; // Escala radical no eixo X (muito pequeno a grande)
+            const contorcerY = 0.3 + Math.random() * 1.5; // Escala radical no eixo Y
+            const skewX = (Math.random() - 0.5) * 40; // Inclinação radical
+            const skewY = (Math.random() - 0.5) * 40;
+
+            // Aplica os estilos simultaneamente
+            jacare.style.left = novoX + 'px';
+            jacare.style.top = novoY + 'px';
+            jacare.style.transform = `rotate(${rotacao}deg) scale(${contorcerX}, ${contorcerY}) skew(${skewX}deg, ${skewY}deg)`;
+
+            // Exibe a frase provocativa na posição antiga
+            exibirFrase(oldPos.x, oldPos.y);
+
+            // Restaura a forma natural do corpo em milissegundos, mantendo a rotação
+            setTimeout(() => {
+                jacare.style.transform = `rotate(${rotacao}deg) scale(1, 1) skew(0, 0)`;
+                isFugindo = false; // Permite a próxima fuga
+            }, 150); // A contorção dura 150ms
+        }
+
+        // Função para exibir a frase aleatória
+        function exibirFrase(x, y) {
+            fraseElement.textContent = frases[Math.floor(Math.random() * frases.length)]; // Escolhe aleatoriamente
+            fraseElement.style.left = x + 'px';
+            fraseElement.style.top = y + 'px';
+            
+            fraseElement.classList.remove('show'); // Reseta a animação
+            void fraseElement.offsetWidth; // Força o reflow para resetar a animação
+            fraseElement.classList.add('show'); // Inicia a animação
+        }
+
+        // Detector de colisão agressiva: o jacaré foge se o mouse se aproximar, não apenas sobre ele
+        document.addEventListener('mousemove', (e) => {
+            const cursorX = e.clientX;
+            const cursorY = e.clientY;
+            const jacareCentro = getCentro();
+            
+            // Calcula a distância entre o cursor e o centro do jacaré
+            const distancia = Math.sqrt(Math.pow(cursorX - jacareCentro.x, 2) + Math.pow(cursorY - jacareCentro.y, 2));
+
+            // Zona de perigo de 200px: se o mouse estiver a menos de 200px do centro, o jacaré foge
+            if (distancia < 200 && !isFugindo) {
+                fugirEContorcerAgressivo(e);
+            }
+        });
+
+        // Suporte para toques na tela (mobile), mantendo a lógica agressiva
+        document.addEventListener('touchstart', (e) => {
+            if (isFugindo) return;
+            const toque = e.touches[0];
+            const toqueX = toque.clientX;
+            const toqueY = toque.clientY;
+            const jacareCentro = getCentro();
+
+            const distancia = Math.sqrt(Math.pow(toqueX - jacareCentro.x, 2) + Math.pow(toqueY - jacareCentro.y, 2));
+            
+            // Zona de perigo de 200px para o toque também
+            if (distancia < 200) {
+                fugirEContorcerAgressivo(e);
+            }
+        });
+
+    </script>
 </body>
 </html>
